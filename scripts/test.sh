@@ -1,0 +1,1 @@
+dfx canister call sns_1_token test

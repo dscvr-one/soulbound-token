@@ -1,0 +1,1 @@
+dfx canister install sns_1_token --mode=reinstall
