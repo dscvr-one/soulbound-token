@@ -5,7 +5,10 @@ pub fn is_owner() -> Result<(), String> {
     if State::read_state(|state| state.has_access(ServiceControllerKind::Owner, ic_cdk::api::caller())) {
         Ok(())
     } else {
-        Err("Proper service account require to make this request".to_string())
+        Err(format!(
+            "Proper service account require to make this request: Caller {:?}",
+            ic_cdk::api::caller().to_text()
+        ))
     }
 }
 

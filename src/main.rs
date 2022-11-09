@@ -17,6 +17,7 @@ use crate::http::*;
 use crate::service_controller::ServiceControllerKind;
 use crate::state::State;
 use prelude::*;
+use service_controller::ServiceController;
 use url::Url;
 
 fn main() {}
@@ -82,6 +83,11 @@ fn append_asset(mut asset: Vec<u8>) -> Result<(), String> {
 #[query]
 fn get_admins() -> Vec<Principal> {
     State::read_state(|state| state.get_admins())
+}
+
+#[query]
+fn get_service_controllers() -> Vec<ServiceController> {
+    State::read_state(|state| state.get_service_controllers().clone())
 }
 
 #[update(guard = "is_owner")]

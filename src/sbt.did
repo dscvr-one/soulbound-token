@@ -21,6 +21,19 @@ type EmptyResult = variant {
     Err: text;
 };
 
+type ServiceControllerKind = variant {
+    Backup;
+    Restore;
+    Admin;
+    Owner;
+};
+
+type ServiceController = record {
+    kind: ServiceControllerKind;
+    controller_id: principal;
+    created_at: nat64;
+};
+
 service soulbound_token : {
     "test": () -> (text) query;
     http_request: (request: HttpRequest) -> (HttpResponse) query;
@@ -35,6 +48,7 @@ service soulbound_token : {
     get_admins: () -> (vec principal) query;
     remove_admin: (principal) -> (EmptyResult);
     add_admin: (principal) -> (EmptyResult);
+    get_service_controllers: () -> (vec ServiceController) query;
 
     // Tokenization
     mint: (principal) -> (EmptyResult);

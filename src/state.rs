@@ -1,7 +1,7 @@
 pub(crate) mod stable_storage;
 
 use crate::prelude::*;
-use crate::service_controller::{ServiceControllerKind, ServiceControllers};
+use crate::service_controller::{ServiceController, ServiceControllerKind, ServiceControllers};
 use crate::soulbound_token::SoulboundToken;
 use crate::state::stable_storage::StableStorage;
 use std::cell::RefCell;
@@ -125,6 +125,10 @@ impl State {
                 }
             })
             .collect::<Vec<Principal>>()
+    }
+
+    pub fn get_service_controllers(&self) -> &Vec<ServiceController> {
+        self.controllers.ref_values()
     }
 
     pub fn add_owner(&mut self, principal: Principal) -> bool {
