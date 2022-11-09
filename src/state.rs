@@ -10,7 +10,7 @@ use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct State {
-    nft_img: Vec<u8>,
+    sbt_image: Vec<u8>,
     sbt_index: u64,
     sbts: HashMap<Principal, SoulboundToken>,
     controllers: ServiceControllers,
@@ -19,7 +19,7 @@ pub struct State {
 impl From<StableStorage> for State {
     fn from(storage: StableStorage) -> Self {
         Self {
-            nft_img: storage.nft_img,
+            sbt_image: storage.sbt_image,
             sbt_index: storage.sbt_index,
             sbts: storage.sbts,
             controllers: storage.controllers,
@@ -75,19 +75,19 @@ impl State {
     }
 
     pub fn clear_image(&mut self) {
-        self.nft_img.clear();
+        self.sbt_image.clear();
     }
 
     pub fn append_image_bytes(&mut self, bytes: &mut Vec<u8>) {
-        self.nft_img.append(bytes);
+        self.sbt_image.append(bytes);
     }
 
     pub fn set_image(&mut self, bytes: Vec<u8>) {
-        self.nft_img = bytes;
+        self.sbt_image = bytes;
     }
 
     pub fn get_image(&self) -> &[u8] {
-        &self.nft_img
+        &self.sbt_image
     }
 
     pub fn get_registry(&self) -> Vec<(Principal, Vec<u64>)> {

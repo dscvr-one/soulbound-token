@@ -7,7 +7,7 @@ use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Clone, CandidType)]
 pub struct StableStorage {
-    pub(crate) nft_img: Vec<u8>,
+    pub(crate) sbt_image: Vec<u8>,
     pub(crate) sbt_index: u64,
     pub(crate) sbts: HashMap<Principal, SoulboundToken>,
     pub(crate) controllers: ServiceControllers,
@@ -16,7 +16,7 @@ pub struct StableStorage {
 impl From<&mut State> for StableStorage {
     fn from(state: &mut State) -> Self {
         Self {
-            nft_img: std::mem::take(&mut state.nft_img),
+            sbt_image: std::mem::take(&mut state.sbt_image),
             sbt_index: std::mem::take(&mut state.sbt_index),
             sbts: std::mem::take(&mut state.sbts),
             controllers: std::mem::take(&mut state.controllers),
