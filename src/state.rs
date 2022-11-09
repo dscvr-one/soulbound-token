@@ -2,8 +2,8 @@ pub(crate) mod stable_storage;
 
 use crate::prelude::*;
 use crate::service_controller::{ServiceControllerKind, ServiceControllers};
-use crate::state::stable_storage::StableStorage;
 use crate::soul_bound_nft::SoulBoundNFT;
+use crate::state::stable_storage::StableStorage;
 use std::cell::RefCell;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;

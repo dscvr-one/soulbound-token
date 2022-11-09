@@ -2,8 +2,8 @@ mod guards;
 mod http;
 mod hydrate;
 mod service_controller;
-mod state;
 mod soul_bound_nft;
+mod state;
 
 pub mod prelude {
     pub use candid::Principal;
