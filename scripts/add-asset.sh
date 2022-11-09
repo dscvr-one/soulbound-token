@@ -4,6 +4,7 @@ cargo test --workspace
 arg="(\"sns-1-image\")"
 dfx canister call soulbound_token clear_asset --type idl "$arg"
 
+
 file="./assets/image_as_bytes.txt"
 while read -r line; do
     arg=$(echo "$line" | tr '[' '{')

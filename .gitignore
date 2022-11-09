@@ -16,3 +16,9 @@ Cargo.lock
 .dfx
 .idea
 assets/image_as_bytes.txt
+
+# development
+keys/
+
+# javascript
+node_modules/
