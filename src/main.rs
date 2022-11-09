@@ -61,10 +61,7 @@ fn add_asset(asset_name: String, asset: Vec<u8>) -> Result<(), String> {
 
 #[query]
 fn get_asset(asset_name: String) -> Result<Vec<u8>, String> {
-    State::read_state(|state| match state.get_image(&asset_name) {
-        Ok(bytes) => Ok(bytes.to_vec()),
-        Err(e) => Err(e),
-    })
+    State::read_state(|state| state.get_image(&asset_name).map(|bytes| bytes.to_vec()))
 }
 
 #[update(guard = "is_admin")]
@@ -75,9 +72,9 @@ fn clear_asset(asset_name: String) {
 }
 
 #[update(guard = "is_admin")]
-fn append_asset(asset_name: String, mut asset: Vec<u8>) -> Result<(), String> {
+fn append_asset(asset_name: String, asset: Vec<u8>) -> Result<(), String> {
     State::mutate_state(|state| {
-        state.append_image_bytes(asset_name, &mut asset);
+        state.append_image_bytes(asset_name,  asset);
         Ok(())
     })
 }

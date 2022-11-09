@@ -90,11 +90,11 @@ impl State {
         };
     }
 
-    pub fn append_image_bytes(&mut self, image: String, bytes: &mut Vec<u8>) {
+    pub fn append_image_bytes(&mut self, image: String, mut bytes: Vec<u8>) {
         if let Some(image) = self.sbt_images.get_mut(&image) {
-            image.append(bytes);
+            image.append(&mut bytes);
         } else {
-            self.sbt_images.insert(image, bytes.to_owned());
+            self.sbt_images.insert(image, bytes);
         };
     }
 
