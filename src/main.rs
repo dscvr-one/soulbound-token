@@ -74,7 +74,7 @@ fn clear_asset(asset_name: String) {
 #[update(guard = "is_admin")]
 fn append_asset(asset_name: String, asset: Vec<u8>) -> Result<(), String> {
     State::mutate_state(|state| {
-        state.append_image_bytes(asset_name,  asset);
+        state.append_image_bytes(asset_name, asset);
         Ok(())
     })
 }
