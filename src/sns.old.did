@@ -1,4 +1,0 @@
-
-service sns_1_token : {
-    "main": () -> () query;
-}

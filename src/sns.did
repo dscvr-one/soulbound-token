@@ -1,4 +1,44 @@
+type HeaderField = record {
+    text;
+    text;
+};
+
+type HttpRequest = record {
+    method: text;
+    url: text;
+    headers: vec HeaderField;
+    body: blob;
+};
+
+type HttpResponse = record {
+    status_code: nat16;
+    headers: vec HeaderField;
+    body: blob;
+};
+
+type EmptyResult = variant {
+    Ok;
+    Err: text;
+}
 
 service sns_1_token : {
     "test": () -> (text) query;
+    http_request: (request: HttpRequest) -> (HttpResponse) query;
+
+    // Asset Management
+    add_asset: (asset: vec nat8) -> (EmptyResult);
+    append_asset: (asset: vec nat8) -> (EmptyResult);
+    clear_asset: () -> ();
+    get_asset: () -> (vec nat8) query;
+
+    // Admin Management
+    get_admins: () -> (vec principal) query;
+    remove_admin: (principal) -> (EmptyResult);
+    add_admin: (principal) -> (EmptyResult);
+
+    // Tokenization
+    mint: (principal) -> (EmptyResult);
+    get_registry: () -> (vec (principal; vec nat64;) ) query;
+    tokens: (user: principal) -> (vec nat64) query;
+
 }
