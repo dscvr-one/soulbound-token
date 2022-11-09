@@ -11,7 +11,7 @@ Cargo.lock
 
 
 # Added by cargo
-
+canister_ids.json
 /target
 .dfx
 .idea
