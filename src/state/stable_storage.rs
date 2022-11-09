@@ -1,15 +1,15 @@
 use super::State;
 use crate::prelude::*;
 use crate::service_controller::ServiceControllers;
-use crate::soul_bound_nft::SoulBoundNFT;
+use crate::soulbound_token::SoulboundToken;
 use ic_cdk::api::stable;
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Clone, CandidType)]
 pub struct StableStorage {
     pub(crate) nft_img: Vec<u8>,
-    pub(crate) nft_index: u64,
-    pub(crate) soul_bound_nfts: HashMap<Principal, SoulBoundNFT>,
+    pub(crate) sbt_index: u64,
+    pub(crate) sbts: HashMap<Principal, SoulboundToken>,
     pub(crate) controllers: ServiceControllers,
 }
 
@@ -17,8 +17,8 @@ impl From<&mut State> for StableStorage {
     fn from(state: &mut State) -> Self {
         Self {
             nft_img: std::mem::take(&mut state.nft_img),
-            nft_index: std::mem::take(&mut state.nft_index),
-            soul_bound_nfts: std::mem::take(&mut state.soul_bound_nfts),
+            sbt_index: std::mem::take(&mut state.sbt_index),
+            sbts: std::mem::take(&mut state.sbts),
             controllers: std::mem::take(&mut state.controllers),
         }
     }

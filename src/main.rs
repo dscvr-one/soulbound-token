@@ -2,7 +2,7 @@ mod guards;
 mod http;
 mod hydrate;
 mod service_controller;
-mod soul_bound_nft;
+mod soulbound_token;
 mod state;
 
 pub mod prelude {
