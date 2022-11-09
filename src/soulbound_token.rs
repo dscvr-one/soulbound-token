@@ -3,11 +3,12 @@ use crate::prelude::*;
 #[derive(Serialize, Deserialize, CandidType, Debug, Clone)]
 pub struct SoulboundToken {
     pub id: u64,
+    pub image: String,
 }
 
 impl SoulboundToken {
-    pub fn new(id: u64) -> Self {
-        Self { id }
+    pub fn new(id: u64, image: String) -> Self {
+        Self { id, image }
     }
 }
 
