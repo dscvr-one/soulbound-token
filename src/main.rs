@@ -3,7 +3,7 @@ mod http;
 mod hydrate;
 mod service_controller;
 mod state;
-mod token;
+mod soul_bound_nft;
 
 pub mod prelude {
     pub use candid::Principal;

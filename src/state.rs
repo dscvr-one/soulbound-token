@@ -3,7 +3,7 @@ pub(crate) mod stable_storage;
 use crate::prelude::*;
 use crate::service_controller::{ServiceControllerKind, ServiceControllers};
 use crate::state::stable_storage::StableStorage;
-use crate::token::Token;
+use crate::soul_bound_nft::SoulBoundNFT;
 use std::cell::RefCell;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
@@ -11,8 +11,8 @@ use std::collections::HashMap;
 #[derive(Default)]
 pub struct State {
     nft_img: Vec<u8>,
-    token_index: u64,
-    tokens: HashMap<Principal, Token>,
+    nft_index: u64,
+    soul_bound_nfts: HashMap<Principal, SoulBoundNFT>,
     controllers: ServiceControllers,
 }
 
@@ -20,8 +20,8 @@ impl From<StableStorage> for State {
     fn from(storage: StableStorage) -> Self {
         Self {
             nft_img: storage.nft_img,
-            token_index: storage.token_index,
-            tokens: storage.tokens,
+            nft_index: storage.nft_index,
+            soul_bound_nfts: storage.soul_bound_nfts,
             controllers: storage.controllers,
         }
     }
@@ -41,24 +41,24 @@ impl State {
     }
 
     pub fn get_next_index(&self) -> u64 {
-        self.token_index
+        self.nft_index
     }
 
     pub fn increment_index(&mut self) {
-        self.token_index += 1;
+        self.nft_index += 1;
     }
 
     pub fn mint_token(&mut self, user: Principal) -> Result<(), String> {
         let index = self.get_next_index();
 
-        let result = match self.tokens.entry(user) {
+        let result = match self.soul_bound_nfts.entry(user) {
             Entry::Occupied(entry) => Err(format!(
                 "Principal {:?} already owns Token: {:?}",
                 entry.key(),
                 entry.get()
             )),
             Entry::Vacant(entry) => {
-                entry.insert(Token::new(index));
+                entry.insert(SoulBoundNFT::new(index));
                 Ok(())
             }
         };
@@ -71,7 +71,7 @@ impl State {
     }
 
     pub fn contains_token(&self, id: u64) -> bool {
-        self.tokens.values().any(|token| token.id == id)
+        self.soul_bound_nfts.values().any(|token| token.id == id)
     }
 
     pub fn clear_image(&mut self) {
@@ -91,14 +91,14 @@ impl State {
     }
 
     pub fn get_registry(&self) -> Vec<(Principal, Vec<u64>)> {
-        self.tokens
+        self.soul_bound_nfts
             .iter()
             .map(|(principal, token)| (*principal, vec![token.id]))
             .collect()
     }
 
     pub fn get_user_registry(&self, user: Principal) -> Vec<u64> {
-        if let Some(id) = self.tokens.iter().find_map(
+        if let Some(id) = self.soul_bound_nfts.iter().find_map(
             |(principal, token)| {
                 if *principal == user {
                     Some(token.id)

@@ -1,11 +1,11 @@
 use crate::prelude::*;
 
 #[derive(Serialize, Deserialize, CandidType, Debug, Clone)]
-pub struct Token {
+pub struct SoulBoundNFT {
     pub id: u64,
 }
 
-impl Token {
+impl SoulBoundNFT {
     pub fn new(id: u64) -> Self {
         Self { id }
     }
