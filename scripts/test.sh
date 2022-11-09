@@ -1,1 +1,1 @@
-dfx canister call sns_1_token test
+dfx canister call soulbound_token test
