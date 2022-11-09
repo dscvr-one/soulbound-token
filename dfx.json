@@ -5,7 +5,7 @@
     "soulbound_token": {
       "type": "rust",
       "package": "soulbound-token-canister",
-      "candid": "src/sns.did"
+      "candid": "src/sbt.did"
     }
   },
   "defaults": {
