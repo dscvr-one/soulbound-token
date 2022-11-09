@@ -21,6 +21,10 @@ type EmptyResult = variant {
     Err: text;
 }
 
+type RegistryTuple = record {
+
+}
+
 service sns_1_token : {
     "test": () -> (text) query;
     http_request: (request: HttpRequest) -> (HttpResponse) query;
@@ -38,7 +42,7 @@ service sns_1_token : {
 
     // Tokenization
     mint: (principal) -> (EmptyResult);
-    get_registry: () -> (vec (principal; vec nat64;) ) query;
+    get_registry: () -> (vec record {principal; vec nat64;} ) query;
     tokens: (user: principal) -> (vec nat64) query;
 
 }
