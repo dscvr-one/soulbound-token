@@ -39,7 +39,7 @@ fn test() -> String {
 
 #[update(guard = "is_admin")]
 fn mint(principal: Principal) -> Result<(), String> {
-    State::mutate_state(|state| state.mint_token(principal))
+    State::mutate_state(|state| state.mint_soulbound_token(principal, "sns-1-image".to_string()))
 }
 
 #[query]
@@ -48,34 +48,34 @@ fn get_registry() -> Vec<(Principal, Vec<u64>)> {
 }
 
 #[query]
-fn tokens(user: Principal) -> Vec<u64> {
+fn soulbound_tokens(user: Principal) -> Vec<u64> {
     State::read_state(|state| state.get_user_registry(user))
 }
 
 #[update(guard = "is_admin")]
-fn add_asset(asset: Vec<u8>) -> Result<(), String> {
+fn add_asset(asset_name: String, asset: Vec<u8>) -> Result<(), String> {
     State::mutate_state(|state| {
-        state.set_image(asset);
+        state.set_image(asset_name, asset);
         Ok(())
     })
 }
 
 #[query]
-fn get_asset() -> Vec<u8> {
-    State::read_state(|state| state.get_image().to_vec())
+fn get_asset(asset_name: String) -> Result<Vec<u8>, String> {
+    State::read_state(|state| state.get_image(&asset_name).map(|bytes| bytes.to_vec()))
 }
 
 #[update(guard = "is_admin")]
-fn clear_asset() {
+fn clear_asset(asset_name: String) {
     State::mutate_state(|state| {
-        state.clear_image();
+        state.clear_image(asset_name);
     })
 }
 
 #[update(guard = "is_admin")]
-fn append_asset(mut asset: Vec<u8>) -> Result<(), String> {
+fn append_asset(asset_name: String, asset: Vec<u8>) -> Result<(), String> {
     State::mutate_state(|state| {
-        state.append_image_bytes(&mut asset);
+        state.append_image_bytes(asset_name, asset);
         Ok(())
     })
 }
@@ -132,7 +132,7 @@ async fn http_request(req: HttpRequest) -> HttpResponse {
                 )
                 .as_bytes()
                 .to_vec(),
-            }
+            };
         }
     };
     ic_cdk::println!("url: {:?}", url);
@@ -157,9 +157,8 @@ async fn http_request(req: HttpRequest) -> HttpResponse {
             };
         };
 
-        State::read_state(|state| {
-            if state.contains_token(id) {
-                let image = state.get_image().to_vec();
+        State::read_state(|state| match state.get_sbt_image(id) {
+            Ok(image) => {
                 ic_cdk::println!("{:?}", req);
 
                 let headers = vec![
@@ -170,15 +169,14 @@ async fn http_request(req: HttpRequest) -> HttpResponse {
                 HttpResponse {
                     status_code: HttpStatus::Ok as u16,
                     headers,
-                    body: image,
-                }
-            } else {
-                HttpResponse {
-                    status_code: HttpStatus::NotFound as u16,
-                    headers: vec![],
-                    body: format!("Token with id: {:?} does not exist.", id).as_bytes().to_vec(),
+                    body: image.to_vec(),
                 }
             }
+            Err(e) => HttpResponse {
+                status_code: HttpStatus::NotFound as u16,
+                headers: vec![],
+                body: e.as_bytes().to_vec(),
+            },
         })
     } else {
         HttpResponse {

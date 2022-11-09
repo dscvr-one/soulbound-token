@@ -21,6 +21,11 @@ type EmptyResult = variant {
     Err: text;
 };
 
+type AssetResult = variant {
+    Ok: vec nat8;
+    Err: text;
+}
+
 type ServiceControllerKind = variant {
     Backup;
     Restore;
@@ -39,10 +44,10 @@ service soulbound_token : {
     http_request: (request: HttpRequest) -> (HttpResponse) query;
 
     // Asset Management
-    add_asset: (asset: vec nat8) -> (EmptyResult);
-    append_asset: (asset: vec nat8) -> (EmptyResult);
-    clear_asset: () -> ();
-    get_asset: () -> (vec nat8) query;
+    add_asset: (asset_name: text, asset: vec nat8) -> (EmptyResult);
+    append_asset: (asset_name: text, asset: vec nat8) -> (EmptyResult);
+    clear_asset: (asset_name: text) -> ();
+    get_asset: (asset_name: text) -> (AssetResult) query;
 
     // Admin Management
     get_admins: () -> (vec principal) query;
@@ -50,9 +55,9 @@ service soulbound_token : {
     add_admin: (principal) -> (EmptyResult);
     get_service_controllers: () -> (vec ServiceController) query;
 
-    // Tokenization
+    // Souldboun Tokenization
     mint: (principal) -> (EmptyResult);
     get_registry: () -> (vec record {principal; vec nat64;} ) query;
-    tokens: (user: principal) -> (vec nat64) query;
+    soulbound_tokens: (user: principal) -> (vec nat64) query;
 
 }

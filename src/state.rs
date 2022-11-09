@@ -10,8 +10,10 @@ use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct State {
-    sbt_image: Vec<u8>,
+    sbt_images: HashMap<String, Vec<u8>>,
     sbt_index: u64,
+    // in the future expand this to a Vec<SoulboundToken>
+    // to support multi sbt capabilities.
     sbts: HashMap<Principal, SoulboundToken>,
     controllers: ServiceControllers,
 }
@@ -19,7 +21,7 @@ pub struct State {
 impl From<StableStorage> for State {
     fn from(storage: StableStorage) -> Self {
         Self {
-            sbt_image: storage.sbt_image,
+            sbt_images: storage.sbt_image,
             sbt_index: storage.sbt_index,
             sbts: storage.sbts,
             controllers: storage.controllers,
@@ -48,17 +50,17 @@ impl State {
         self.sbt_index += 1;
     }
 
-    pub fn mint_token(&mut self, user: Principal) -> Result<(), String> {
+    pub fn mint_soulbound_token(&mut self, user: Principal, token_image: String) -> Result<(), String> {
         let index = self.get_next_index();
 
         let result = match self.sbts.entry(user) {
             Entry::Occupied(entry) => Err(format!(
-                "Principal {:?} already owns Token: {:?}",
+                "Principal {:?} already has its soul bound to Token: {:?}",
                 entry.key(),
                 entry.get()
             )),
             Entry::Vacant(entry) => {
-                entry.insert(SoulboundToken::new(index));
+                entry.insert(SoulboundToken::new(index, token_image));
                 Ok(())
             }
         };
@@ -70,24 +72,42 @@ impl State {
         result
     }
 
-    pub fn contains_token(&self, id: u64) -> bool {
-        self.sbts.values().any(|token| token.id == id)
+    pub fn get_sbt_image(&self, id: u64) -> Result<&[u8], String> {
+        if let Some(image) = self
+            .sbts
+            .iter()
+            .find_map(|(_, sbt)| if id == sbt.id { Some(&sbt.image) } else { None })
+        {
+            self.get_image(image)
+        } else {
+            Err(format!("Token with id {:?} does not exist", id))
+        }
     }
 
-    pub fn clear_image(&mut self) {
-        self.sbt_image.clear();
+    pub fn clear_image(&mut self, image: String) {
+        if let Some(image) = self.sbt_images.get_mut(&image) {
+            image.clear();
+        };
     }
 
-    pub fn append_image_bytes(&mut self, bytes: &mut Vec<u8>) {
-        self.sbt_image.append(bytes);
+    pub fn append_image_bytes(&mut self, image: String, mut bytes: Vec<u8>) {
+        if let Some(image) = self.sbt_images.get_mut(&image) {
+            image.append(&mut bytes);
+        } else {
+            self.sbt_images.insert(image, bytes);
+        };
     }
 
-    pub fn set_image(&mut self, bytes: Vec<u8>) {
-        self.sbt_image = bytes;
+    pub fn set_image(&mut self, image: String, bytes: Vec<u8>) {
+        self.sbt_images.insert(image, bytes);
     }
 
-    pub fn get_image(&self) -> &[u8] {
-        &self.sbt_image
+    pub fn get_image(&self, image: &str) -> Result<&[u8], String> {
+        if let Some(bytes) = self.sbt_images.get(image) {
+            Ok(bytes)
+        } else {
+            Err(format!("Image {:?} does not exist", image))
+        }
     }
 
     pub fn get_registry(&self) -> Vec<(Principal, Vec<u64>)> {
