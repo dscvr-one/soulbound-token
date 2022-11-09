@@ -1,2 +1,2 @@
 dfx canister create --all
-dfx build sns_1_token
+dfx build soulbound_token

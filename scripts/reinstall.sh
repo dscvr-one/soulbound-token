@@ -1,1 +1,1 @@
-dfx canister install sns_1_token --mode=reinstall
+dfx canister install soulbound_token --mode=reinstall

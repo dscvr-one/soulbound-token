@@ -21,7 +21,7 @@ type EmptyResult = variant {
     Err: text;
 };
 
-service sns_1_token : {
+service soulbound_token : {
     "test": () -> (text) query;
     http_request: (request: HttpRequest) -> (HttpResponse) query;
 
