@@ -2,9 +2,9 @@
   "version": 1,
   "dfx": "0.11.1",
   "canisters": {
-    "sns_1_token": {
+    "soulbound_token": {
       "type": "rust",
-      "package": "sns-1-token-canister",
+      "package": "soulbound-token-canister",
       "candid": "src/sns.did"
     }
   },

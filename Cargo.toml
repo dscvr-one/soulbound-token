@@ -1,5 +1,5 @@
 [package]
-name = "sns-1-token-canister"
+name = "soulbound-token-canister"
 version = "0.1.0"
 edition = "2021"
 authors = ["Leif Brockman<lbrockma34@gmail.com>"]

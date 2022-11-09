@@ -1,2 +1,2 @@
-# sns-1-token-canister
-SNS-1 Token Canister
+# soulbound-token-canister
+Soulbound Token Canister
