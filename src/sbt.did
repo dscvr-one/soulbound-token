@@ -24,7 +24,7 @@ type EmptyResult = variant {
 type AssetResult = variant {
     Ok: vec nat8;
     Err: text;
-}
+};
 
 type ServiceControllerKind = variant {
     Backup;
