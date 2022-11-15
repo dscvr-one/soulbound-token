@@ -42,6 +42,11 @@ fn mint(principal: Principal) -> Result<(), String> {
     State::mutate_state(|state| state.mint_soulbound_token(principal, "sns-1-image".to_string()))
 }
 
+#[update(guard = "is_admin")]
+fn mint_many(principals: Vec<Principal>) -> Vec<Result<Principal, String>> {
+    State::mutate_state(|state| state.mint_soulbound_tokens(principals, "sns-1-image".to_string()))
+}
+
 #[query]
 fn get_registry() -> Vec<(Principal, Vec<u64>)> {
     State::read_state(|state| state.get_registry())

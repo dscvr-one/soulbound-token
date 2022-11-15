@@ -21,6 +21,11 @@ type EmptyResult = variant {
     Err: text;
 };
 
+type ManyMintResult = variant {
+    Ok: principal;
+    Err: text;
+};
+
 type AssetResult = variant {
     Ok: vec nat8;
     Err: text;
@@ -57,6 +62,7 @@ service soulbound_token : {
 
     // Souldboun Tokenization
     mint: (principal) -> (EmptyResult);
+    mint_many: (vec principal) -> (vec ManyMintResult);
     get_registry: () -> (vec record {principal; vec nat64;} ) query;
     soulbound_tokens: (user: principal) -> (vec nat64) query;
 

@@ -72,6 +72,22 @@ impl State {
         result
     }
 
+    pub fn mint_soulbound_tokens(
+        &mut self,
+        principals: Vec<Principal>,
+        token_image: String,
+    ) -> Vec<Result<Principal, String>> {
+        let mut results = vec![];
+        for principal in principals {
+            let result = self.mint_soulbound_token(principal, token_image.clone());
+            match result {
+                Ok(()) => results.push(Ok(principal)),
+                Err(msg) => results.push(Err(msg)),
+            }
+        }
+        results
+    }
+
     pub fn get_sbt_image(&self, id: u64) -> Result<&[u8], String> {
         if let Some(image) = self
             .sbts
